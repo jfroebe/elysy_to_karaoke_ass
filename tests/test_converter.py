@@ -29,6 +29,23 @@ class ConverterTests(unittest.TestCase):
         self.assertIn(r"{\kf43}Six", karaoke_words(groups[0]))
         self.assertIn("ride.", karaoke_words(groups[0]))
 
+    def test_hank_real_export_regression(self):
+        """Real ELYSY export must parse and render without lost words."""
+        path = (ROOT / "tests" / "fixtures" /
+                "The_Rangers_Promise_Clear_Rock_Remaster_enhanced-SRT.srt")
+        words = parse_srt(path)
+        self.assertEqual(len(words), 181)
+        self.assertEqual(words[0].text, "Six")
+        self.assertEqual(words[-1].text, "do.")
+        self.assertAlmostEqual(words[0].start, 90.337, places=3)
+        self.assertAlmostEqual(words[-1].end, 162.076, places=3)
+        groups = group_srt(words, 7, 4.0, .65, 38)
+        self.assertGreaterEqual(len(groups), 25)
+        rendered = make_ass(groups, "wide", "Arial", 0, 90, .25, "right")
+        self.assertEqual(rendered.count("Dialogue:"), len(groups))
+        self.assertEqual(rendered.count(r"{\\kf"), len(words))
+        self.assertIn("Ranger's", rendered)
+
     def test_json_lines(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "aligned.json"
