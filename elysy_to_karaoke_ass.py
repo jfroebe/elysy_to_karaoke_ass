@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -217,4 +218,21 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except FileNotFoundError as exc:
+        print(
+            f"Error: File not found: {exc.filename!r}. "
+            "Check the filename and directory, or provide an absolute path.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from None
+    except (PermissionError, IsADirectoryError) as exc:
+        print(f"Error: Cannot access file: {exc}", file=sys.stderr)
+        raise SystemExit(1) from None
+    except (UnicodeError, ValueError) as exc:
+        print(f"Error: Invalid input: {exc}", file=sys.stderr)
+        raise SystemExit(1) from None
+    except OSError as exc:
+        print(f"Error: File operation failed: {exc}", file=sys.stderr)
+        raise SystemExit(1) from None
