@@ -43,7 +43,7 @@ class ConverterTests(unittest.TestCase):
         self.assertGreaterEqual(len(groups), 25)
         rendered = make_ass(groups, "wide", "Arial", 0, 90, .25, "right")
         self.assertEqual(rendered.count("Dialogue:"), len(groups))
-        self.assertEqual(rendered.count(r"{\\kf"), len(words))
+        self.assertEqual(rendered.count(r"{\kf"), len(words))
         self.assertIn("Ranger's", rendered)
 
     def test_json_lines(self):
