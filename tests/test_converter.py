@@ -82,6 +82,32 @@ class ConverterTests(unittest.TestCase):
     def test_timestamp(self):
         self.assertEqual(ass_time(61.23), "0:01:01.23")
 
+    def test_cli_missing_file_is_friendly(self):
+        with tempfile.TemporaryDirectory() as folder:
+            missing = Path(folder) / "missing.srt"
+            target = Path(folder) / "should-not-exist.ass"
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "elysy_to_karaoke_ass.py"),
+                 str(missing), "--output", str(target)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Error: File not found:", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertFalse(target.exists())
+
+    def test_cli_invalid_srt_is_friendly(self):
+        with tempfile.TemporaryDirectory() as folder:
+            invalid = Path(folder) / "invalid.srt"
+            invalid.write_text("not an enhanced SRT", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "elysy_to_karaoke_ass.py"),
+                 str(invalid)], capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Error: Invalid input:", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+
     def test_cli(self):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder) / "reels.ass"
