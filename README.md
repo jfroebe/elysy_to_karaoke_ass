@@ -82,6 +82,16 @@ For TikTok, use the `vertical` profile. For Instagram Feed, generate `lyrics-fee
 
 Instagram UI overlays vary; always preview on-device before posting.
 
+## Troubleshooting missing input files
+
+If a file isn't found, the converter now prints a short error rather than a Python traceback:
+
+```text
+Error: File not found: 'song.srt'. Check the filename and directory, or provide an absolute path.
+```
+
+Verify the file is in your current Terminal directory (`pwd`, then `ls -l`) or supply its complete path. **The file must exist exactly as named**, including capitalization and any `(1)` suffix added by the browser when downloading duplicates. Invalid SRT/JSON files and output write failures also produce concise errors and a nonzero exit status.
+
 ## Settings
 
 ```bash
