@@ -18,7 +18,7 @@ python3 elysy_to_karaoke_ass.py "The_Rangers_Promise_Clear_Rock_Remaster_enhance
   --profile wide --output lyrics-wide.ass
 ```
 
-The command above uses the Hank song's actual **filename** as an example. The full song export is not included in this repository at this time.
+The repository includes Hank's user-provided Enhanced SRT at `tests/fixtures/The_Rangers_Promise_Clear_Rock_Remaster_enhanced-SRT.srt` for regression testing. The timestamp data is preserved unmodified.
 
 ## Presets
 
@@ -130,7 +130,7 @@ python3 -m unittest discover -s tests -v
 ffmpeg -hide_banner -filters | grep ' ass '
 ```
 
-The checked-in `tests/fixtures/sample_enhanced.srt` is a **synthetic regression sample**, not the user's full Hank song export. The real `The_Rangers_Promise_Clear_Rock_Remaster_enhanced-SRT.srt` can be added when its bytes are available.
+The checked-in `tests/fixtures/sample_enhanced.srt` is a **synthetic fixture**. The real `tests/fixtures/The_Rangers_Promise_Clear_Rock_Remaster_enhanced-SRT.srt` contains **181 timed words**, starting at **00:01:30.337** and ending at **00:02:42.076**. The converter successfully retains all 181 word tags in its output. However, **153 words have identical 0.320-second durations**; treat the export as a parser regression fixture, *not* proof that lyric timestamps are synchronized to the recording. Recheck alignment in ELYSY while playing the final audio.
 
 ## Limitations
 
